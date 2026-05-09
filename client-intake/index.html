@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forge GTM — Client intake</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #2563EB;
+      --blue-dark: #1E3A5F;
+      --text: #1a1a2e;
+      --muted: #6b7280;
+      --border: #d1d5db;
+      --bg: #f9fafb;
+      --white: #ffffff;
+      --error: #dc2626;
+      --radius: 8px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--blue-dark);
+      padding: 20px 24px;
+    }
+
+    header .wordmark {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.02em;
+    }
+
+    header .wordmark span {
+      font-weight: 400;
+      opacity: 0.7;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 24px 64px;
+    }
+
+    .form-shell {
+      width: 100%;
+      max-width: 640px;
+    }
+
+    .form-intro {
+      margin-bottom: 40px;
+    }
+
+    .form-intro h1 {
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 12px;
+      color: var(--blue-dark);
+    }
+
+    .form-intro p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+      margin-bottom: 36px;
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .progress-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .progress-label.active {
+      color: var(--blue);
+    }
+
+    .progress-bar-track {
+      height: 4px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--blue);
+      border-radius: 99px;
+      transition: width 0.3s ease;
+    }
+
+    /* Steps */
+    .step {
+      display: none;
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    .step-header {
+      margin-bottom: 28px;
+    }
+
+    .step-number {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .step-header h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--blue-dark);
+    }
+
+    /* Fields */
+    .field {
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    label .optional {
+      font-weight: 400;
+      color: var(--muted);
+      margin-left: 6px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="url"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--white);
+      transition: border-color 0.15s;
+      appearance: none;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    input.error,
+    textarea.error,
+    select.error {
+      border-color: var(--error);
+    }
+
+    .error-msg {
+      font-size: 13px;
+      color: var(--error);
+      margin-top: 5px;
+      display: none;
+    }
+
+    .error-msg.visible {
+      display: block;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .field-hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    /* Radio and checkbox groups */
+    .radio-group,
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .radio-group label,
+    .checkbox-group label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-weight: 400;
+      cursor: pointer;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .radio-group label:hover,
+    .checkbox-group label:hover {
+      border-color: var(--blue);
+      background: #f0f5ff;
+    }
+
+    .radio-group input[type="radio"],
+    .checkbox-group input[type="checkbox"] {
+      width: auto;
+      margin-top: 2px;
+      flex-shrink: 0;
+      accent-color: var(--blue);
+    }
+
+    /* Navigation */
+    .step-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 36px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 24px;
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      transition: background 0.15s, opacity 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-submit {
+      background: var(--blue-dark);
+      color: var(--white);
+    }
+
+    .btn-submit:hover {
+      background: #162e4a;
+    }
+
+    /* Success screen */
+    #screen-success {
+      display: none;
+      text-align: center;
+      padding: 48px 0;
+    }
+
+    #screen-success .icon {
+      width: 56px;
+      height: 56px;
+      background: #dcfce7;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 26px;
+    }
+
+    #screen-success h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--blue-dark);
+      margin-bottom: 12px;
+    }
+
+    #screen-success p {
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    /* Error screen */
+    #screen-error {
+      display: none;
+      text-align: center;
+      padding: 48px 0;
+    }
+
+    #screen-error .icon {
+      width: 56px;
+      height: 56px;
+      background: #fee2e2;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 26px;
+    }
+
+    #screen-error h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    #screen-error p {
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 420px;
+      margin: 0 auto 24px;
+    }
+
+    /* Submitting state */
+    .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: var(--white);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 13px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wordmark">Forge GTM <span>/ Client intake</span></div>
+</header>
+
+<main>
+  <div class="form-shell">
+
+    <div id="form-container">
+
+      <div class="form-intro">
+        <h1>Tell us about your business</h1>
+        <p>This takes around 10 minutes. Your answers help us configure the system to your brand before production starts.</p>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-labels">
+          <span class="progress-label active" id="progress-label">Step 1 of 6: Company</span>
+        </div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progress-fill" style="width: 16.66%"></div>
+        </div>
+      </div>
+
+      <!-- Step 1: Company -->
+      <div class="step active" id="step-1">
+        <div class="step-header">
+          <div class="step-number">Step 1 of 6</div>
+          <h2>About your company</h2>
+        </div>
+
+        <div class="field">
+          <label for="company-name">Company name</label>
+          <input type="text" id="company-name" name="company_name" placeholder="Acme Ltd" autocomplete="organization">
+          <div class="error-msg" id="err-company-name">Please enter your company name.</div>
+        </div>
+
+        <div class="field">
+          <label for="industry">Industry or sector</label>
+          <input type="text" id="industry" name="industry" placeholder="e.g. B2B SaaS, professional services, fintech">
+          <div class="error-msg" id="err-industry">Please enter your industry.</div>
+        </div>
+
+        <div class="field">
+          <label for="company-size">Company size <span class="optional">(optional)</span></label>
+          <select id="company-size" name="company_size">
+            <option value="">Select...</option>
+            <option value="1-10">1 to 10 people</option>
+            <option value="11-50">11 to 50 people</option>
+            <option value="51-200">51 to 200 people</option>
+            <option value="201-500">201 to 500 people</option>
+            <option value="500+">More than 500 people</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="website">Website URL</label>
+          <input type="url" id="website" name="website" placeholder="https://www.example.com" autocomplete="url">
+          <div class="error-msg" id="err-website">Please enter your website URL.</div>
+        </div>
+
+        <div class="field">
+          <label for="linkedin">LinkedIn company page URL <span class="optional">(optional)</span></label>
+          <input type="url" id="linkedin" name="linkedin" placeholder="https://www.linkedin.com/company/...">
+        </div>
+
+        <div class="field">
+          <label for="other-social">Other social profiles <span class="optional">(optional)</span></label>
+          <input type="text" id="other-social" name="other_social" placeholder="e.g. Twitter/X, Instagram — paste URLs separated by commas">
+        </div>
+
+        <div class="step-nav">
+          <div></div>
+          <button class="btn btn-primary" onclick="nextStep(1)">Next</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Products -->
+      <div class="step" id="step-2">
+        <div class="step-header">
+          <div class="step-number">Step 2 of 6</div>
+          <h2>Products and services</h2>
+        </div>
+
+        <div class="field">
+          <label for="what-you-do">What does your company do?</label>
+          <textarea id="what-you-do" name="what_you_do" placeholder="Describe what you do in plain terms — as if explaining to someone who has never heard of you."></textarea>
+          <div class="error-msg" id="err-what-you-do">Please describe what your company does.</div>
+        </div>
+
+        <div class="field">
+          <label for="products-list">Products or services <span class="optional">(optional)</span></label>
+          <textarea id="products-list" name="products_list" placeholder="List your main products or service lines, one per line."></textarea>
+        </div>
+
+        <div class="field">
+          <label for="differentiators">What makes you different from your competitors? <span class="optional">(optional)</span></label>
+          <textarea id="differentiators" name="differentiators" placeholder="What do you do that others do not, or what do you do significantly better?"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="terminology">Key terminology <span class="optional">(optional)</span></label>
+          <input type="text" id="terminology" name="terminology" placeholder="e.g. product names, branded terms, or words you always or never use">
+          <p class="field-hint">Any words or phrases that must appear in a specific way in your materials.</p>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn btn-secondary" onclick="prevStep(2)">Back</button>
+          <button class="btn btn-primary" onclick="nextStep(2)">Next</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Buyers -->
+      <div class="step" id="step-3">
+        <div class="step-header">
+          <div class="step-number">Step 3 of 6</div>
+          <h2>Your buyers</h2>
+        </div>
+
+        <div class="field">
+          <label for="ideal-customer">Who is your ideal customer?</label>
+          <textarea id="ideal-customer" name="ideal_customer" placeholder="Describe the type of business or person you sell to most successfully."></textarea>
+          <div class="error-msg" id="err-ideal-customer">Please describe your ideal customer.</div>
+        </div>
+
+        <div class="field">
+          <label for="buyer-titles">Typical buyer job titles <span class="optional">(optional)</span></label>
+          <input type="text" id="buyer-titles" name="buyer_titles" placeholder="e.g. Head of Marketing, CFO, Operations Director">
+        </div>
+
+        <div class="field">
+          <label for="buyer-industries">Industries or sectors you typically sell into <span class="optional">(optional)</span></label>
+          <input type="text" id="buyer-industries" name="buyer_industries" placeholder="e.g. financial services, professional services, technology">
+        </div>
+
+        <div class="field">
+          <label for="problem-solved">What problem do you solve for them?</label>
+          <textarea id="problem-solved" name="problem_solved" placeholder="What is the buyer struggling with before they find you? What does life look like after they buy?"></textarea>
+          <div class="error-msg" id="err-problem-solved">Please describe the problem you solve.</div>
+        </div>
+
+        <div class="field">
+          <label for="customer-voice">How do your customers describe you? <span class="optional">(optional)</span></label>
+          <textarea id="customer-voice" name="customer_voice" placeholder="Paste in any customer quotes, review excerpts, or testimonials you have. These help the system write in your customers' language."></textarea>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn btn-secondary" onclick="prevStep(3)">Back</button>
+          <button class="btn btn-primary" onclick="nextStep(3)">Next</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Brand -->
+      <div class="step" id="step-4">
+        <div class="step-header">
+          <div class="step-number">Step 4 of 6</div>
+          <h2>Your brand</h2>
+        </div>
+
+        <div class="field">
+          <label>Do you have brand guidelines?</label>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="has_guidelines" value="yes"> Yes, we have a brand guidelines document
+            </label>
+            <label>
+              <input type="radio" name="has_guidelines" value="partial"> We have some guidance but nothing formal
+            </label>
+            <label>
+              <input type="radio" name="has_guidelines" value="no"> No, we are starting from scratch
+            </label>
+          </div>
+          <div class="error-msg" id="err-has-guidelines">Please select an option.</div>
+        </div>
+
+        <div class="field">
+          <label>Do you have a vector logo file (SVG or PDF format)?</label>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="has_logo" value="yes"> Yes
+            </label>
+            <label>
+              <input type="radio" name="has_logo" value="no"> No, I only have PNG or JPG versions
+            </label>
+            <label>
+              <input type="radio" name="has_logo" value="unsure"> I am not sure
+            </label>
+          </div>
+          <div class="error-msg" id="err-has-logo">Please select an option.</div>
+        </div>
+
+        <div class="field">
+          <label>Do you have existing marketing materials we can use as reference?</label>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="has_materials" value="yes"> Yes
+            </label>
+            <label>
+              <input type="radio" name="has_materials" value="no"> No
+            </label>
+          </div>
+          <div class="error-msg" id="err-has-materials">Please select an option.</div>
+        </div>
+
+        <div class="field">
+          <label for="brand-files-link">Brand files sharing link <span class="optional">(optional)</span></label>
+          <input type="url" id="brand-files-link" name="brand_files_link" placeholder="https://drive.google.com/... or Dropbox / WeTransfer link">
+          <p class="field-hint">Share a Google Drive, Dropbox, or WeTransfer link containing your brand guidelines, logo files, and any reference materials. Set sharing to "anyone with the link can view".</p>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn btn-secondary" onclick="prevStep(4)">Back</button>
+          <button class="btn btn-primary" onclick="nextStep(4)">Next</button>
+        </div>
+      </div>
+
+      <!-- Step 5: Goals -->
+      <div class="step" id="step-5">
+        <div class="step-header">
+          <div class="step-number">Step 5 of 6</div>
+          <h2>Your goals</h2>
+        </div>
+
+        <div class="field">
+          <label>What materials do you need to produce? <span class="optional">(select all that apply)</span></label>
+          <div class="checkbox-group">
+            <label><input type="checkbox" name="materials" value="presentations"> Presentations and pitch decks</label>
+            <label><input type="checkbox" name="materials" value="brochures"> Brochures and product guides</label>
+            <label><input type="checkbox" name="materials" value="one-pagers"> One-pagers and leave-behinds</label>
+            <label><input type="checkbox" name="materials" value="social"> Social media content</label>
+            <label><input type="checkbox" name="materials" value="whitepapers"> Whitepapers and long-form content</label>
+            <label><input type="checkbox" name="materials" value="other"> Other</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="timeline">When do you need to be up and running?</label>
+          <select id="timeline" name="timeline">
+            <option value="">Select...</option>
+            <option value="asap">As soon as possible</option>
+            <option value="2-weeks">Within 2 weeks</option>
+            <option value="1-month">Within 1 month</option>
+            <option value="3-months">Within 3 months</option>
+            <option value="flexible">No fixed deadline</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="success-criteria">What does success look like? <span class="optional">(optional)</span></label>
+          <textarea id="success-criteria" name="success_criteria" placeholder="What would make this engagement a clear win for your team? Anything specific you want us to know about your standards or constraints."></textarea>
+        </div>
+
+        <div class="field">
+          <label for="additional-notes">Anything else we should know? <span class="optional">(optional)</span></label>
+          <textarea id="additional-notes" name="additional_notes" placeholder="Any context that does not fit the questions above."></textarea>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn btn-secondary" onclick="prevStep(5)">Back</button>
+          <button class="btn btn-primary" onclick="nextStep(5)">Next</button>
+        </div>
+      </div>
+
+      <!-- Step 6: Contact -->
+      <div class="step" id="step-6">
+        <div class="step-header">
+          <div class="step-number">Step 6 of 6</div>
+          <h2>Your contact details</h2>
+        </div>
+
+        <div class="field">
+          <label for="contact-name">Your name</label>
+          <input type="text" id="contact-name" name="contact_name" placeholder="First and last name" autocomplete="name">
+          <div class="error-msg" id="err-contact-name">Please enter your name.</div>
+        </div>
+
+        <div class="field">
+          <label for="contact-title">Job title <span class="optional">(optional)</span></label>
+          <input type="text" id="contact-title" name="contact_title" placeholder="e.g. Head of Marketing" autocomplete="organization-title">
+        </div>
+
+        <div class="field">
+          <label for="contact-email">Email address</label>
+          <input type="email" id="contact-email" name="contact_email" placeholder="you@company.com" autocomplete="email">
+          <div class="error-msg" id="err-contact-email">Please enter a valid email address.</div>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn btn-secondary" onclick="prevStep(6)">Back</button>
+          <button class="btn btn-submit" id="submit-btn" onclick="submitForm()">Submit intake form</button>
+        </div>
+      </div>
+
+    </div><!-- /form-container -->
+
+    <!-- Success screen -->
+    <div id="screen-success">
+      <div class="icon">&#10003;</div>
+      <h2>Received. Thank you.</h2>
+      <p>Your intake form has been submitted. Your Forge GTM account holder will be in touch to confirm next steps.</p>
+    </div>
+
+    <!-- Error screen -->
+    <div id="screen-error">
+      <div class="icon">&#33;</div>
+      <h2>Something went wrong</h2>
+      <p>Your form could not be submitted. Please try again, or contact your Forge GTM account holder directly.</p>
+      <button class="btn btn-primary" onclick="resetError()">Try again</button>
+    </div>
+
+  </div><!-- /form-shell -->
+</main>
+
+<footer>
+  Forge GTM &mdash; confidential intake form
+</footer>
+
+<script>
+  const TOTAL_STEPS = 6;
+  let currentStep = 1;
+
+  const stepLabels = [
+    'Company',
+    'Products and services',
+    'Buyers',
+    'Brand',
+    'Goals',
+    'Contact'
+  ];
+
+  function showStep(n) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step-' + n).classList.add('active');
+
+    const pct = (n / TOTAL_STEPS) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-label').textContent =
+      'Step ' + n + ' of ' + TOTAL_STEPS + ': ' + stepLabels[n - 1];
+
+    document.querySelectorAll('.progress-label').forEach(l => l.classList.remove('active'));
+    document.getElementById('progress-label').classList.add('active');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function clearErrors(stepNum) {
+    const step = document.getElementById('step-' + stepNum);
+    step.querySelectorAll('.error-msg').forEach(e => e.classList.remove('visible'));
+    step.querySelectorAll('input, textarea, select').forEach(el => el.classList.remove('error'));
+  }
+
+  function showError(fieldId, errId) {
+    const field = document.getElementById(fieldId);
+    const err = document.getElementById(errId);
+    if (field) field.classList.add('error');
+    if (err) err.classList.add('visible');
+    return false;
+  }
+
+  function validateStep(n) {
+    clearErrors(n);
+    let valid = true;
+
+    if (n === 1) {
+      if (!v('company-name')) { showError('company-name', 'err-company-name'); valid = false; }
+      if (!v('industry')) { showError('industry', 'err-industry'); valid = false; }
+      if (!v('website')) { showError('website', 'err-website'); valid = false; }
+    }
+
+    if (n === 2) {
+      if (!v('what-you-do')) { showError('what-you-do', 'err-what-you-do'); valid = false; }
+    }
+
+    if (n === 3) {
+      if (!v('ideal-customer')) { showError('ideal-customer', 'err-ideal-customer'); valid = false; }
+      if (!v('problem-solved')) { showError('problem-solved', 'err-problem-solved'); valid = false; }
+    }
+
+    if (n === 4) {
+      if (!radioVal('has_guidelines')) {
+        document.getElementById('err-has-guidelines').classList.add('visible'); valid = false;
+      }
+      if (!radioVal('has_logo')) {
+        document.getElementById('err-has-logo').classList.add('visible'); valid = false;
+      }
+      if (!radioVal('has_materials')) {
+        document.getElementById('err-has-materials').classList.add('visible'); valid = false;
+      }
+    }
+
+    if (n === 6) {
+      if (!v('contact-name')) { showError('contact-name', 'err-contact-name'); valid = false; }
+      const emailEl = document.getElementById('contact-email');
+      if (!emailEl.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim())) {
+        showError('contact-email', 'err-contact-email'); valid = false;
+      }
+    }
+
+    return valid;
+  }
+
+  function v(id) {
+    const el = document.getElementById(id);
+    return el && el.value.trim().length > 0;
+  }
+
+  function radioVal(name) {
+    return !!document.querySelector('input[name="' + name + '"]:checked');
+  }
+
+  function nextStep(current) {
+    if (!validateStep(current)) return;
+    currentStep = current + 1;
+    showStep(currentStep);
+  }
+
+  function prevStep(current) {
+    currentStep = current - 1;
+    showStep(currentStep);
+  }
+
+  function gatherData() {
+    const g = id => (document.getElementById(id) || {}).value || '';
+    const r = name => {
+      const el = document.querySelector('input[name="' + name + '"]:checked');
+      return el ? el.value : '';
+    };
+    const checkboxes = name => {
+      return Array.from(document.querySelectorAll('input[name="' + name + '"]:checked'))
+        .map(el => el.value);
+    };
+
+    return {
+      company_name:     g('company-name'),
+      industry:         g('industry'),
+      company_size:     g('company-size'),
+      website:          g('website'),
+      linkedin:         g('linkedin'),
+      other_social:     g('other-social'),
+      what_you_do:      g('what-you-do'),
+      products_list:    g('products-list'),
+      differentiators:  g('differentiators'),
+      terminology:      g('terminology'),
+      ideal_customer:   g('ideal-customer'),
+      buyer_titles:     g('buyer-titles'),
+      buyer_industries: g('buyer-industries'),
+      problem_solved:   g('problem-solved'),
+      customer_voice:   g('customer-voice'),
+      has_guidelines:   r('has_guidelines'),
+      has_logo:         r('has_logo'),
+      has_materials:    r('has_materials'),
+      brand_files_link: g('brand-files-link'),
+      materials:        checkboxes('materials'),
+      timeline:         g('timeline'),
+      success_criteria: g('success-criteria'),
+      additional_notes: g('additional-notes'),
+      contact_name:     g('contact-name'),
+      contact_title:    g('contact-title'),
+      contact_email:    g('contact-email'),
+    };
+  }
+
+  async function submitForm() {
+    if (!validateStep(6)) return;
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Submitting...';
+
+    const data = gatherData();
+
+    try {
+      const res = await fetch('/.netlify/functions/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        document.getElementById('form-container').style.display = 'none';
+        document.getElementById('screen-success').style.display = 'block';
+      } else {
+        throw new Error('Non-200 response');
+      }
+    } catch (err) {
+      document.getElementById('form-container').style.display = 'none';
+      document.getElementById('screen-error').style.display = 'block';
+    }
+  }
+
+  function resetError() {
+    document.getElementById('screen-error').style.display = 'none';
+    document.getElementById('form-container').style.display = 'block';
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = false;
+    btn.innerHTML = 'Submit intake form';
+  }
+</script>
+
+</body>
+</html>

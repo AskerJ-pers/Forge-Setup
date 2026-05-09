@@ -1,0 +1,4 @@
+[build]
+  base    = "client-intake"
+  publish = "."
+  functions = "netlify/functions"
