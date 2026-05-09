@@ -84,7 +84,7 @@ Follow the instructions for your operating system below.
    ```
 
 4. Follow any instructions the script displays on screen.
-5. When you see **Setup complete. You are ready to use Forge GTM.** the installation is finished.
+5. When you see **Setup complete. Your environment is ready.** the installation is finished.
 
 ---
 
@@ -105,7 +105,7 @@ Follow the instructions for your operating system below.
    ```
 
 5. Follow any instructions the script displays on screen.
-6. When you see **Setup complete. You are ready to use Forge GTM.** the installation is finished.
+6. When you see **Setup complete. Your environment is ready.** the installation is finished.
 
 ---
 
@@ -117,31 +117,14 @@ Use this method only if you cannot run the PowerShell script above.
 2. Inside the Forge-Setup folder, double-click the file **setup-windows-batch.bat**.
 3. If Windows shows a security warning, click **More info** and then **Run anyway**.
 4. Follow any instructions the script displays on screen.
-5. When you see **Setup complete. You are ready to use Forge GTM.** the installation is finished.
+5. When you see **Setup complete. Your environment is ready.** the installation is finished.
 
 ---
 
-## Section 6: Set up your brand
+## Section 6: You are ready
 
-Your environment is ready. Before you produce any materials, you need to fill in your brand details so the system knows how your output should look and sound.
+Your environment is set up. The software Forge GTM needs is installed, and your repos are on your computer.
 
-Two documents are waiting for you inside the `Brand-Shared` repo you cloned earlier:
-
-| Document | What it captures |
-|---|---|
-| `references/brand-encoder.md` | Your colour palette, logo files, typeface, and visual brand rules |
-| `references/tov-encoder.md` | Your brand voice, writing rules, terminology, and tone of voice |
-
-Open each file, fill in every section using your existing brand guidelines, and send the completed documents to your Forge GTM account holder. They will use them to configure your `Brand-Shared` repo.
-
-You will need to have your brand guidelines to hand before starting. If you do not have them, contact your Forge GTM account holder before proceeding.
-
----
-
-## Section 7: You are ready
-
-Once your account holder confirms that `Brand-Shared` has been configured with your brand, you are ready to start producing materials.
-
-Open Claude Code, navigate to one of your Forge GTM repos, and follow the workflow guide your account holder has provided.
+Your Forge GTM account holder will confirm which repo to open first and provide a workflow guide covering how to produce materials day to day.
 
 If you run into any problems at any stage, contact your Forge GTM account holder before trying to resolve them yourself.
