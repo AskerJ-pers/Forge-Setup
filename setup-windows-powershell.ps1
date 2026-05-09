@@ -121,8 +121,14 @@ if (-not (Get-Command gswin64c -ErrorAction SilentlyContinue) -and $failures -no
 
 if ($failures.Count -eq 0) {
     Write-Host ""
-    Write-Host "Setup complete. You are ready to use Forge GTM."
+    Write-Host "Setup complete. Your environment is ready."
     Write-Host "Note: if any command is not found when you first use Claude Code, close and reopen your terminal window to reload your PATH."
+    Write-Host ""
+    Write-Host "Next step: fill in your brand details."
+    Write-Host "Open the Brand-Shared repo you cloned and complete:"
+    Write-Host "  references/brand-encoder.md   -- colours, logo, typeface"
+    Write-Host "  references/tov-encoder.md     -- voice, writing rules, terminology"
+    Write-Host "Send the completed files to your Forge GTM account holder."
     Write-Host ""
 } else {
     Write-Host ""

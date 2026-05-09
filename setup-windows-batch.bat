@@ -84,7 +84,14 @@ if errorlevel 1 (
 :: ─── Done ────────────────────────────────────────────────────────────────────
 
 echo.
-echo Setup complete. You are ready to use Forge GTM.
+echo Setup complete. Your environment is ready.
 echo Please close this window and reopen your terminal before using Claude Code.
+echo.
+echo Next step: fill in your brand details.
+echo Open the Brand-Shared repo you cloned and complete:
+echo   references\brand-encoder.md   -- colours, logo, typeface
+echo   references\tov-encoder.md     -- voice, writing rules, terminology
+echo Send the completed files to your Forge GTM account holder.
+echo.
 echo Press any key to close.
 pause >nul

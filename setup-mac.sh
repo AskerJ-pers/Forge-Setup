@@ -122,7 +122,13 @@ echo "Checking everything is in place..."
 
 if [[ ${#FAILURES[@]} -eq 0 ]]; then
   echo ""
-  echo "Setup complete. You are ready to use Forge GTM."
+  echo "Setup complete. Your environment is ready."
+  echo ""
+  echo "Next step: fill in your brand details."
+  echo "Open the Brand-Shared repo you cloned and complete:"
+  echo "  references/brand-encoder.md   — colours, logo, typeface"
+  echo "  references/tov-encoder.md     — voice, writing rules, terminology"
+  echo "Send the completed files to your Forge GTM account holder."
   echo ""
 else
   echo ""

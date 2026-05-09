@@ -121,10 +121,27 @@ Use this method only if you cannot run the PowerShell script above.
 
 ---
 
-## Section 6: You are ready
+## Section 6: Set up your brand
 
-Your computer is now set up for Forge GTM.
+Your environment is ready. Before you produce any materials, you need to fill in your brand details so the system knows how your output should look and sound.
 
-Open Claude Code, navigate to one of the Forge GTM repos you cloned earlier, and follow the workflow guide your account holder has provided.
+Two documents are waiting for you inside the `Brand-Shared` repo you cloned earlier:
 
-If you run into any problems, contact your Forge GTM account holder before trying to resolve them yourself.
+| Document | What it captures |
+|---|---|
+| `references/brand-encoder.md` | Your colour palette, logo files, typeface, and visual brand rules |
+| `references/tov-encoder.md` | Your brand voice, writing rules, terminology, and tone of voice |
+
+Open each file, fill in every section using your existing brand guidelines, and send the completed documents to your Forge GTM account holder. They will use them to configure your `Brand-Shared` repo.
+
+You will need to have your brand guidelines to hand before starting. If you do not have them, contact your Forge GTM account holder before proceeding.
+
+---
+
+## Section 7: You are ready
+
+Once your account holder confirms that `Brand-Shared` has been configured with your brand, you are ready to start producing materials.
+
+Open Claude Code, navigate to one of your Forge GTM repos, and follow the workflow guide your account holder has provided.
+
+If you run into any problems at any stage, contact your Forge GTM account holder before trying to resolve them yourself.
