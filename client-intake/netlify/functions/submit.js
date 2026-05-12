@@ -10,7 +10,7 @@ exports.handler = async function (event) {
   }
 
   const token = process.env.GITHUB_TOKEN;
-  const repo  = process.env.GITHUB_SUBMISSIONS_REPO; // e.g. AskerJ-pers/Client-Submissions
+  const repo  = process.env.GITHUB_SUBMISSIONS_REPO;
 
   if (!token || !repo) {
     console.error('Missing environment variables: GITHUB_TOKEN or GITHUB_SUBMISSIONS_REPO');
